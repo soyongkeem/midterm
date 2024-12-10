@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Gothic+A1&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>책임 의사 이상</title>
+    <style>
+        /* 기본 설정 */
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #e3e3e3;
+            color: #000000;
+            font-family: "Noto Sans KR", sans-serif;
+            margin: 0;
+            text-align: center;
+            flex-direction: column;
+        }
+
+        .footer {
+            font-size: 1rem;
+            margin-top: 1rem;
+            color: #666;
+        }
+
+        /* 버튼 스타일 */
+        .button {
+            padding: 8px 16px;
+            font-size: 1.2em;
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .button:hover {
+            background-color: #007bff;
+            transform: scale(1.05);
+        }
+
+        /* 버튼 고정 위치 설정 */
+        .fixed-button {
+            position: fixed;
+            bottom: 20px;
+        }
+
+        #goToFirst {
+            left: 20px;
+        }
+
+        #goToCredit {
+            right: 20px;
+        }
+
+        /* 본문 크레딧 섹션 */
+        .credit-section {
+            margin-top: 40px;
+            padding: 1.5rem;
+            font-size: 18px;
+            font-style: arial;
+            line-height: 1.3;
+            
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 고정 버튼 -->
+    <button class="button fixed-button" id="goToFirst">Go to First</button>
+
+    <!-- 크레딧 본문 -->
+    <div class="credit-section">
+<strong>Credits</strong>
+        <p>오감도는 세상을 진단하는 도구, 2024<br>Web interaction Design</p>
+        <p>김서영 @soyongkeem All Right reserved.</p>
+    </div>
+
+    <script>
+        document.getElementById('goToFirst').addEventListener('click', function() {
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>

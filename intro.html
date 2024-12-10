@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오감도는 세상을 진단하는 도구</title>
+    <link href="https://fonts.googleapis.com/css2?family=Gothic+A1&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            background-image: url('intro-bg.svg'); /* 배경 이미지 설정 */
+            background-size: cover; /* 배경 이미지를 화면에 맞게 조정 */
+            background-repeat: no-repeat; /* 이미지 반복 제거 */
+            background-position: center; /* 이미지 중앙 배치 */
+            color: #ffffff;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            overflow-x: hidden;
+            position: relative;
+        }
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            position: fixed;
+            top: 100px;
+            left: 60px;
+            z-index: 15;
+        }
+        .logo-container {
+            display: flex;
+    align-items: center; /* 수직 중앙정렬 */
+    gap: 40px; /* 로고와 아이콘 간격 */
+    width: 180px;
+    height: auto;
+}
+        .logo-container img {
+            
+            width: 100px; /* 로고 크기 */
+            height: auto;
+        }
+        .info-icon {
+            width: 120px; /* 로고의 1/2 크기 */
+            height: auto;
+            max-width: 50%; /* 로고 크기에 비례하여 줄어듦 */
+            object-fit: contain; /* 아이콘 크기에 맞게 조정 */
+        }
+
+        .description-title {
+            font-weight: bold;
+            font-size: 20px;
+            margin-top: 80px;
+            margin-bottom: 10px;
+            font-family: 'Gothic A1', sans-serif;
+        }
+        .description-text {
+            font-family: 'Gothic A1', sans-serif;
+            font-size: 16px;
+            line-height: 1.8em;
+            color: #ffffff;
+            width: 480px;
+        }
+        .canvas-container {
+            position: fixed;
+            top: 120px;
+            right: 20px;
+            width: 500px;
+            height: 500px;
+            background-color: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+        .click-text {
+            font-family: "Arial Narrow", Arial, sans-serif;
+            color: white;
+            font-size: 18px;
+            position: relative;
+            top: -225px;
+            z-index: 10;
+            pointer-events: none;
+        }
+        .next-button-container {
+            position: fixed;
+            bottom: 40px;
+            right: 100px;
+            display: flex;
+            align-items: center;
+            gap: 10px; /* 버튼과 텍스트 간의 간격 설정 */
+        }
+        .next-button {
+            background-color: #007bff;
+            color: white;
+            font-size: 18px;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        .next-button:hover {
+            background-color: #0056b3;
+        }
+        .instruction-text {
+            font-family: 'Gothic A1', sans-serif;
+            color: #007bff;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 좌측 상단 로고 및 설명 텍스트 그룹 -->
+    <div class="content-container">
+        <div class="logo-container">
+            <img src="logo.svg" alt="Logo" />
+            <img src="information.svg" alt="Information" class="info-icon" />
+        </div>
+        <div class="description-title">오감도는 세상을 진단하는 도구</div>
+        <div class="description-text">
+            오감도는 1934년에 발표된 연작 시로, 제목은 원래 '조감도'에서 '조'가 '오'로 잘못 표기된 것에서 비롯되었다는 설이 있습니다. 
+            <br>
+            <br>2024년 9월, GIST 연구팀은 이상의 시 <오감도>에 물리학을 접목시켜 새로운 해석법을 제시합니다.<br>
+            숫자판을 원기둥으로 변환하고 도넛 형태로 읽었을 때 정상적인 수열로 해석됩니다.<br><br>
+            도넛 내부는 우리가 사는 세상이고, 표면을 지나는 무수히 많은 선은 내부의 상태를 진단할 수 있는 도구라는 것입니다.
+            <br>오감도를 그려서 우리 주변 세상을 진단해보세요!
+        </div>
+    </div>
+
+    <!-- Three.js 애니메이션 및 텍스트 -->
+    <div class="canvas-container">
+        <div id="three-canvas"></div>
+        <div class="click-text">>Click to transform</div>
+    </div>
+
+    <!-- 오감도 안내 텍스트와 Go to Next 버튼 -->
+    <div class="next-button-container">
+        <span class="instruction-text">오감도를 그려보세요 -> </span>
+        <button class="next-button" onclick="location.href='index1.html'">Go to Next</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setSize(800, 800);
+        document.getElementById('three-canvas').appendChild(renderer.domElement);
+
+        const planeGeometry = new THREE.PlaneGeometry(3, 3, 64, 64);
+        const material = new THREE.MeshBasicMaterial({ color: '#ffffff', wireframe: true });
+        const plane = new THREE.Mesh(planeGeometry, material);
+        scene.add(plane);
+
+        camera.position.z = 5;
+        let time = 0;
+        const duration = 5;
+        let isAnimating = false;
+        let isTorus = false;
+
+        const originalPositions = [];
+        const positionAttribute = plane.geometry.attributes.position;
+        for (let i = 0; i < positionAttribute.count; i++) {
+            originalPositions.push({
+                x: positionAttribute.getX(i),
+                y: positionAttribute.getY(i),
+                z: positionAttribute.getZ(i)
+            });
+        }
+
+        function animate() {
+            if (isAnimating) {
+                time += 0.01;
+                const t = Math.min(time / duration, 1);
+
+                const radius = 1.5;
+                const tubeRadius = 0.6;
+
+                for (let i = 0; i < positionAttribute.count; i++) {
+                    const x = originalPositions[i].x;
+                    const y = originalPositions[i].y;
+                    const theta = Math.atan2(y, x);
+                    const distance = Math.sqrt(x * x + y * y);
+
+                    const targetX = isTorus
+                        ? (radius + tubeRadius * Math.cos(distance * Math.PI)) * Math.cos(theta)
+                        : originalPositions[i].x;
+                    const targetY = isTorus
+                        ? (radius + tubeRadius * Math.cos(distance * Math.PI)) * Math.sin(theta)
+                        : originalPositions[i].y;
+                    const targetZ = isTorus
+                        ? tubeRadius * Math.sin(distance * Math.PI)
+                        : 0;
+
+                    const finalX = THREE.MathUtils.lerp(positionAttribute.getX(i), targetX, t);
+                    const finalY = THREE.MathUtils.lerp(positionAttribute.getY(i), targetY, t);
+                    const finalZ = THREE.MathUtils.lerp(positionAttribute.getZ(i), targetZ, t);
+
+                    positionAttribute.setXYZ(i, finalX, finalY, finalZ);
+                }
+
+                positionAttribute.needsUpdate = true;
+
+                if (t === 1) isAnimating = false;
+            }
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+
+        function onClick() {
+            time = 0;
+            isAnimating = true;
+            isTorus = !isTorus;
+        }
+
+        window.addEventListener('click', onClick);
+        animate();
+    </script>
+</body>
+</html>

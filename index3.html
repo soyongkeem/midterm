@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시제4호</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
+            height: 100%;
+            background-color: #e3e3e3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 50px);
+            grid-template-rows: repeat(2, 50px);
+            gap: 5px;
+            font-size: 20px;
+            font-family: 'Arial', sans-serif;
+        }
+        .number {
+            color: black;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid black;
+            cursor: pointer;
+        }
+        .circle {
+            border-radius: 50%;
+        }
+        .blue { color: #007bff; }
+        .go-to-first-button {
+            font-size: 16px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+        .go-to-first-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container" id="grid-container">
+        <div class="number">1</div>
+        <div class="number">2</div>
+        <div class="number">0</div>
+        <div class="number">1</div>
+    </div>
+    
+    <button class="go-to-first-button" onclick="goToFirstPage()">Next</button>
+    <script>
+        let gridSize = 2; // 초기 그리드 크기
+        let totalCells = gridSize * gridSize;
+        const baseSequence = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+        const colors = ["red", "blue", "yellow"];
+
+        function getNumberForPosition(row, col) {
+            let rowStartIndex = row % baseSequence.length;
+            let finalIndex = (rowStartIndex + col) % baseSequence.length;
+            return baseSequence[finalIndex];
+        }
+
+        function addNewCells(startIndex, endIndex) {
+            const container = document.getElementById('grid-container');
+            const randomCircleIndex = Math.floor(Math.random() * (endIndex - startIndex));
+
+            for (let i = startIndex; i < endIndex; i++) {
+                const numberDiv = document.createElement('div');
+                numberDiv.classList.add('number');
+                const row = Math.floor(i / gridSize);
+                const col = i % gridSize;
+                numberDiv.innerText = getNumberForPosition(row, col);
+                numberDiv.onclick = expandGrid;
+
+                // 7번째 셀마다 색상 적용
+                if ((i + 1) % 7 === 0) {
+                    const colorClass = colors[((i + 1) / 7 - 1) % colors.length];
+                    numberDiv.classList.add(colorClass);
+                }
+
+                // 랜덤한 하나의 박스를 동그라미로 변경
+                if (i - startIndex === randomCircleIndex) {
+                    numberDiv.classList.add('circle');
+                }
+
+                container.appendChild(numberDiv);
+            }
+        }
+
+        function expandGrid() {
+            const container = document.getElementById('grid-container');
+            gridSize += 2;
+            container.style.gridTemplateColumns = `repeat(${gridSize}, 50px)`;
+            container.style.gridTemplateRows = `repeat(${gridSize}, 50px)`;
+
+            const cells = container.children;
+            for (let i = 0; i < cells.length; i++) {
+                const row = Math.floor(i / gridSize);
+                const col = i % gridSize;
+                cells[i].innerText = getNumberForPosition(row, col);
+            }
+
+            const newTotalCells = gridSize * gridSize;
+            addNewCells(totalCells, newTotalCells);
+            totalCells = newTotalCells;
+        }
+
+        function goToFirstPage() {
+            location.href = 'index4.html';
+        }
+
+        const initialCells = document.querySelectorAll('.number');
+        const randomCircleIndex = Math.floor(Math.random() * initialCells.length);
+
+        initialCells.forEach((cell, index) => {
+            const row = Math.floor(index / gridSize);
+            const col = index % gridSize;
+            cell.innerText = getNumberForPosition(row, col);
+            cell.onclick = expandGrid;
+
+            // 7번째 셀마다 색상 적용
+            if ((index + 1) % 7 === 0) {
+                const colorClass = colors[((index + 1) / 7 - 1) % colors.length];
+                cell.classList.add(colorClass);
+            }
+
+            if (index === randomCircleIndex) {
+                cell.classList.add('circle');
+            }
+        });
+    </script>
+</body>
+</html>
